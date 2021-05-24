@@ -70,7 +70,9 @@ def get_city(data: dict) -> City:
         print(f"Country '{COUNTRY}' not found.")
         exit(1)
 
-    city_countries = [c for c in countries if c["name"].lower() == f"nextbike {CITY}".lower()]
+    city_countries = [
+        c for c in countries if c["name"].lower() == f"nextbike {CITY}".lower()
+    ]
 
     if len(city_countries) == 0:
         print(f"Country for city '{CITY}' not found.")
@@ -84,14 +86,20 @@ def get_city(data: dict) -> City:
 
     city = cities[0]
     places = [
-        Place(p["name"], p["bikes_available_to_rent"], p["name"].lower() in [f.lower() for f in FAVORITE_PLACES])
+        Place(
+            p["name"],
+            p["bikes_available_to_rent"],
+            p["name"].lower() in [f.lower() for f in FAVORITE_PLACES],
+        )
         for p in city["places"]
     ]
 
     return City(city["name"], city["available_bikes"], places)
 
 
-def print_bikes(name: str, max_name_length: int, count: int, max_count_lenght: int) -> None:
+def print_bikes(
+    name: str, max_name_length: int, count: int, max_count_lenght: int
+) -> None:
     print(
         f"{name:<{max_name_length}} "
         f"{count:>{max_count_lenght}} "
