@@ -56,12 +56,33 @@ def main() -> None:
 
 
 def get_data() -> dict:
-    return requests.get(URL).json()
+    try:
+        return requests.get(URL).json()
+    except requests.exceptions.ConnectionError:
+        print(f"Cannot connect to '{URL}'.")
+        exit(1)
 
 
 def get_city(data: dict) -> City:
-    country = [c for c in data["countries"] if c["name"] == f"nextbike {CITY}"][0]
-    city = country["cities"][0]
+    countries = data["countries"]
+
+    if len(countries) == 0:
+        print(f"Country '{COUNTRY}' not found.")
+        exit(1)
+
+    city_countries = [c for c in countries if c["name"] == f"nextbike {CITY}"]
+
+    if len(city_countries) == 0:
+        print(f"Country for city '{CITY}' not found.")
+        exit(1)
+
+    cities = city_countries[0]["cities"]
+
+    if len(cities) == 0:
+        print(f"City '{CITY}' not found.")
+        exit(1)
+
+    city = cities[0]
     places = [
         Place(p["name"], p["bikes_available_to_rent"], p["name"] in FAVORITE_PLACES)
         for p in city["places"]
