@@ -47,9 +47,7 @@ def main() -> None:
     if len(favorite_places) > 0:
         print()
 
-    for place in sorted(
-        [p for p in city.places if not p.is_favorite], key=lambda p: p.name
-    ):
+    for place in [p for p in city.places if not p.is_favorite]:
         print_bikes(
             place.name, max_name_length, place.bikes_available_to_rent, max_count_length
         )
@@ -85,14 +83,17 @@ def get_city(data: dict) -> City:
         exit(1)
 
     city = cities[0]
-    places = [
-        Place(
-            p["name"],
-            p["bikes_available_to_rent"],
-            p["name"].lower() in [f.lower() for f in FAVORITE_PLACES],
-        )
-        for p in city["places"]
-    ]
+    places = sorted(
+        [
+            Place(
+                p["name"],
+                p["bikes_available_to_rent"],
+                p["name"].lower() in [f.lower() for f in FAVORITE_PLACES],
+            )
+            for p in city["places"]
+        ],
+        key=lambda p: p.name,
+    )
 
     return City(city["name"], city["available_bikes"], places)
 
