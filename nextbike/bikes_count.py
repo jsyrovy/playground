@@ -1,6 +1,7 @@
-from dataclasses import dataclass
-
-import requests
+import dataclasses
+import urllib.error
+import urllib.request
+import json
 
 COUNTRY = "cz"
 CITY = "Pardubice"
@@ -17,14 +18,14 @@ BIKE_EMOJI = "🚲"
 NO_BIKE_EMOJI = "🚳"
 
 
-@dataclass()
+@dataclasses.dataclass()
 class Place:
     name: str
     bikes_available_to_rent: int
     is_favorite: bool
 
 
-@dataclass()
+@dataclasses.dataclass()
 class City:
     name: str
     available_bikes: int
@@ -59,8 +60,9 @@ def main() -> None:
 
 def get_data() -> dict:
     try:
-        return requests.get(URL).json()
-    except requests.exceptions.ConnectionError:
+        request = urllib.request.urlopen(URL)
+        return json.load(request)
+    except (urllib.error.HTTPError, urllib.error.URLError):
         print(f"Cannot connect to '{URL}'.")
         exit(1)
 
