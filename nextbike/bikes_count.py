@@ -9,6 +9,7 @@ FAVORITE_PLACES = (
     "Na Spravedlnosti - K.Ř. PČR",
     "Sokolovna - Na Olšinkách",
 )
+SHOW_FAVORITE_PLACES_ONLY = True
 
 URL = f"https://api.nextbike.net/maps/nextbike-official.json?countries={COUNTRY}"
 
@@ -43,6 +44,9 @@ def main() -> None:
         print_bikes(
             place.name, max_name_length, place.bikes_available_to_rent, max_count_length
         )
+
+    if SHOW_FAVORITE_PLACES_ONLY:
+        return
 
     if len(favorite_places) > 0:
         print()
